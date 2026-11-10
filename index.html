@@ -1,0 +1,1548 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>C.E.N.S N° 464</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23fffdf8'/%3E%3Ctext x='32' y='47' text-anchor='middle' font-family='Georgia,serif' font-size='48' font-weight='bold' fill='%23ef8752'%3EC%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --ink: #26383b;
+      --muted: #607174;
+      --paper: #eef2f0;
+      --white: #fbfcfa;
+      --green: #315d5a;
+      --lime: #b8c9b4;
+      --orange: #ad765e;
+      --line: #d3ddda;
+      --shadow: 0 18px 40px rgba(38, 56, 59, .12);
+      --cover-image: linear-gradient(90deg, rgba(31, 55, 57, .82), rgba(31, 55, 57, .18)), url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85');
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      background-image: var(--cover-image);
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      margin: 0;
+      padding: 0 0 70px;
+    }
+
+    .hero {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 0;
+      height: 100vh;
+      height: 100svh;
+      padding: clamp(28px, 6vw, 70px);
+      overflow: hidden;
+      background-image: var(--cover-image);
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+    }
+
+    .hero-content {
+      position: absolute;
+      top: 60%;
+      left: 5%;
+      width: min(48vw, 660px);
+      color: var(--white);
+      text-align: center;
+      transform: translateY(-50%);
+    }
+
+    .scroll-brand {
+      position: fixed;
+      inset: 0 0 auto;
+      z-index: 12;
+      display: flex;
+      align-items: center;
+      min-height: 56px;
+      padding: 0 clamp(18px, 5vw, 48px);
+      color: var(--white);
+      background: transparent;
+      font-size: 1.2rem;
+      text-decoration: none;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-100%);
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .8);
+    }
+
+    .scroll-brand.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .navigation-toggle {
+      position: fixed;
+      top: 8px;
+      right: clamp(18px, 5vw, 48px);
+      z-index: 63;
+      display: flex;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      color: var(--white);
+      border: 0;
+      background: transparent;
+      filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .55));
+      cursor: pointer;
+    }
+
+    .navigation-toggle:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 5px;
+    }
+
+    .navigation-toggle.is-open {
+      color: var(--green);
+      filter: none;
+    }
+
+    .navigation-mark {
+      display: flex;
+      height: 24px;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .navigation-mark span {
+      display: block;
+      width: 2px;
+      height: 24px;
+      background: currentColor;
+    }
+
+    .navigation-mark span:first-child { transform: rotate(18deg); }
+
+    .navigation-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 61;
+      border: 0;
+      background: rgba(22, 39, 42, .56);
+    }
+
+    .navigation-backdrop[hidden] { display: none; }
+
+    .navigation-drawer {
+      position: fixed;
+      inset: 0 0 0 auto;
+      z-index: 62;
+      display: grid;
+      align-content: start;
+      gap: clamp(28px, 5vh, 52px);
+      width: min(94vw, 1280px);
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: auto;
+      padding: clamp(28px, 5vw, 64px);
+      color: var(--ink);
+      background-color: #dce5df;
+      box-shadow: -24px 0 70px rgba(22, 39, 42, .22);
+      isolation: isolate;
+      opacity: 0;
+      transform: translateX(100%);
+      visibility: hidden;
+      transition:
+        transform .65s cubic-bezier(.22, 1, .36, 1),
+        opacity .45s ease,
+        visibility .65s;
+    }
+
+    .navigation-drawer::before {
+      position: absolute;
+      z-index: 0;
+      inset: -12px;
+      background-image:
+        linear-gradient(rgba(220, 229, 223, .62), rgba(220, 229, 223, .62)),
+        var(--navigation-illustration, none);
+      background-position: center;
+      background-size: cover;
+      content: '';
+      filter: blur(9px) saturate(.78);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .45s ease;
+    }
+
+    .navigation-drawer[data-preview]::before { opacity: 1; }
+    .navigation-drawer > * { position: relative; z-index: 1; }
+
+    .navigation-drawer[data-preview="naturales"] {
+      --navigation-illustration: url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1800&q=75");
+    }
+
+    .navigation-drawer[data-preview="gestion"] {
+      --navigation-illustration: url("https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=75");
+    }
+
+    .navigation-drawer[data-preview="biblioteca"] {
+      --navigation-illustration: url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=75");
+    }
+
+    .navigation-drawer[data-preview="galeria"] {
+      --navigation-illustration: url("https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1800&q=75");
+    }
+
+    .navigation-drawer.is-open {
+      opacity: 1;
+      transform: translateX(0);
+      visibility: visible;
+    }
+
+    .navigation-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .navigation-kicker {
+      margin: 0 0 8px;
+      color: var(--orange);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .75rem;
+      font-weight: bold;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .navigation-header h2 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: normal;
+    }
+
+    .navigation-section h3 {
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .82rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .modality-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .modality {
+      align-self: start;
+      border-top: 4px solid var(--green);
+      background: var(--white);
+      box-shadow: 0 10px 28px rgba(38, 56, 59, .08);
+    }
+
+    @media (hover: hover) {
+      .modality:hover .modality-years { display: grid; }
+    }
+
+    .modality-toggle {
+      display: flex;
+      width: 100%;
+      min-height: 86px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px;
+      color: var(--ink);
+      border: 0;
+      background: transparent;
+      font: inherit;
+      font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .modality-toggle::after {
+      content: '+';
+      color: var(--green);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1.8rem;
+      font-weight: normal;
+    }
+
+    .modality-toggle[aria-expanded="true"]::after { content: '−'; }
+
+    .modality-years {
+      display: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+      padding: 0 22px 22px;
+      list-style: none;
+    }
+
+    .modality-years.is-open { display: grid; }
+
+    .modality-years li {
+      padding: 14px 8px;
+      color: var(--green);
+      border: 1px solid var(--line);
+      background: #f4f7f5;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .navigation-links {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .navigation-link {
+      display: flex;
+      min-height: 76px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      color: var(--green);
+      border: 1px solid var(--line);
+      background: var(--white);
+      font-size: 1.2rem;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .navigation-link:not(:disabled):hover,
+    .navigation-link:not(:disabled):focus-visible { border-color: var(--green); background: #f4f7f5; }
+
+    .navigation-link:disabled {
+      color: var(--muted);
+      cursor: not-allowed;
+      opacity: .75;
+    }
+
+    .navigation-link small {
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .68rem;
+      letter-spacing: .04em;
+    }
+
+    .contact-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .contact-options[hidden] { display: none; }
+
+    .contact-option {
+      display: grid;
+      gap: 8px;
+      min-height: 76px;
+      align-content: center;
+      padding: 16px 20px;
+      color: var(--green);
+      border: 1px solid var(--line);
+      background: var(--white);
+      font-size: 1.05rem;
+      text-decoration: none;
+    }
+
+    .contact-option:hover,
+    .contact-option:focus-visible { border-color: var(--green); background: #f4f7f5; }
+
+    .contact-option small {
+      color: var(--muted);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .72rem;
+      overflow-wrap: anywhere;
+    }
+
+    body.navigation-open { overflow: hidden; }
+
+    h1 {
+      margin: 14px 0;
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      font-weight: normal;
+      line-height: .9;
+      letter-spacing: 0;
+    }
+
+    .hero-number {
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 300;
+      letter-spacing: .02em;
+    }
+
+    .hero p {
+      max-width: 520px;
+      margin: 0 auto;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.45;
+    }
+
+    .intro {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 50px;
+      padding: 64px 0 32px;
+    }
+
+    .intro h2 { margin: 0; font-size: 2rem; font-weight: normal; }
+    .intro p { margin: 0; color: var(--muted); font-size: 1.08rem; line-height: 1.7; }
+
+    .menus {
+      padding: 28px 0 36px;
+    }
+
+    .dropdown-menu {
+      align-self: start;
+      position: relative;
+      background: var(--white);
+      width: min(100%, 760px);
+      border-top: 5px solid var(--green);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .dropdown-menu.is-open > .menu-content { display: block; }
+
+    .menu-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+      padding: 24px;
+      color: inherit;
+      border: 0;
+      background: transparent;
+      font-size: 1.45rem;
+      font-weight: bold;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .menu-title::after { content: '+'; color: var(--green); font-family: Arial, sans-serif; font-size: 1.8rem; font-weight: normal; }
+    .menu-title[aria-expanded="true"]::after { content: '−'; }
+
+    .menu-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 8;
+      width: 100%;
+      border-radius: 0 0 18px 18px;
+      border-top: 1px solid var(--line);
+      padding: 4px 24px 24px;
+      color: var(--muted);
+      background: rgba(251, 252, 250, .92);
+      box-shadow: 0 18px 32px rgba(38, 56, 59, .14);
+      backdrop-filter: blur(8px);
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    .menu-content ul { margin: 12px 0 0; padding-left: 20px; columns: 2; }
+    .menu-content li { padding: 4px 0; }
+
+    .menu-content a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    .menu-content a:hover,
+    .menu-content a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .subjects {
+      display: grid;
+      gap: 22px;
+    }
+
+    .subject {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0;
+      align-items: stretch;
+      padding: 0;
+      overflow: hidden;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--green);
+      border-radius: 22px;
+      box-shadow: 0 8px 22px rgba(24, 50, 44, .06);
+      scroll-margin-top: 24px;
+    }
+
+    .subject-visual {
+      position: relative;
+      height: 220px;
+      overflow: hidden;
+      background: var(--green);
+    }
+
+    .subject-visual::after {
+      content: '';
+      position: absolute;
+      inset: 20% 0 0;
+      background: linear-gradient(180deg, transparent, rgba(20, 36, 38, .82));
+      pointer-events: none;
+    }
+
+    .subject-visual .subject-icon {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      order: initial;
+      cursor: pointer;
+    }
+
+    .subject-visual .subject-icon:focus-visible {
+      outline: 3px solid var(--white);
+      outline-offset: -6px;
+    }
+
+    .subject-visual .subject-heading {
+      position: absolute;
+      inset: auto 0 0;
+      z-index: 1;
+      margin: 0;
+      padding: 24px;
+    }
+
+    .subject .subject-visual h2 {
+      margin: 0;
+      padding: 0;
+      color: var(--white);
+      border: 0;
+      background: transparent;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: rgba(15, 29, 31, .82);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, .8);
+    }
+
+    .subject-copy { padding: 24px; }
+
+    .subject-examples { display: none; margin-top: 24px; }
+    .subject.is-focused .subject-examples { display: block; }
+    .subject-examples > p { margin-bottom: 24px; }
+    .subject-example-section { margin-top: 28px; }
+    .subject-example-section h3 {
+      margin: 0 0 8px;
+      color: var(--green);
+      font-size: 1.35rem;
+      font-weight: normal;
+    }
+    .subject-example-section > p { margin-bottom: 16px; }
+    .subject-example-scroll {
+      position: relative;
+      width: 100%;
+      height: 110vh;
+    }
+
+    .subject-example-sticky {
+      position: sticky;
+      top: min(24vh, 180px);
+      display: flex;
+      width: 100%;
+      min-width: 0;
+      height: 260px;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .subject-example-images {
+      display: flex;
+      width: max-content;
+      gap: 14px;
+      will-change: transform;
+      transition: transform .16s linear;
+    }
+
+    .subject-example-images img {
+      display: block;
+      width: clamp(260px, 48vw, 390px);
+      height: 240px;
+      flex: 0 0 auto;
+      object-fit: cover;
+      border-radius: 2px;
+    }
+
+    .subject.is-focused {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      z-index: 30;
+      grid-template-columns: minmax(0, 1fr);
+      width: min(1120px, calc(100vw - 32px));
+      height: min(82vh, 820px);
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      padding: 0;
+      border: 1px solid rgba(211, 221, 218, .9);
+      border-radius: 24px;
+      color: #f2f6f4;
+      background: rgba(30, 46, 48, .88);
+      box-shadow: 0 24px 72px rgba(11, 23, 25, .38);
+      -webkit-backdrop-filter: blur(22px) saturate(125%);
+      backdrop-filter: blur(22px) saturate(125%);
+      scroll-behavior: smooth;
+      scroll-padding-top: 84px;
+      transform: translate(-50%, -50%);
+      animation: focus-in .28s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .subject.is-focused .subject-visual {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      height: min(24vh, 180px);
+      max-height: 180px;
+      transition: height .28s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .subject.is-focused .subject-visual .subject-icon {
+      transition:
+        width .36s cubic-bezier(.22, 1, .36, 1),
+        flex-basis .36s cubic-bezier(.22, 1, .36, 1),
+        opacity .3s ease,
+        filter .36s ease,
+        transform .42s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .subject.is-focused .subject-visual::after {
+      inset: 0;
+      background: linear-gradient(180deg, rgba(12, 24, 26, .08) 0%, rgba(12, 24, 26, .18) 36%, rgba(12, 24, 26, .86) 100%);
+    }
+
+    .subject.is-focused .subject-visual h2 {
+      color: var(--white);
+      background: rgba(15, 29, 31, .72);
+    }
+
+    .subject.is-focused .subject-copy {
+      min-width: 0;
+      padding: 24px clamp(24px, 4vw, 42px) 36px;
+      color: #f2f6f4;
+      background: transparent;
+    }
+
+    .subject.is-focused .subject-copy p { color: #d5e0dc; }
+    .subject.is-focused .subject-copy .teacher { color: #c4d9b7; }
+    .subject.is-focused .subject-example-section h3 { color: #f2f6f4; }
+
+    .subject.is-focused .subject-heading { padding-right: 44px; }
+
+    .subject.is-focused.is-compact .subject-visual {
+      display: flex;
+      height: 78px;
+      align-items: center;
+      border-bottom: 1px solid rgba(251, 252, 250, .18);
+      background: var(--ink);
+      box-shadow: inset 0 8px 16px rgba(0, 0, 0, .2), 0 8px 18px rgba(22, 39, 42, .16);
+    }
+
+    .subject.is-focused.is-compact .subject-visual::after { display: none; }
+
+    .subject.is-focused.is-compact .subject-visual .subject-icon {
+      width: 0;
+      min-width: 0;
+      flex: 0 0 0;
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(-24px);
+    }
+
+    .subject.is-focused.is-compact .subject-visual .subject-heading {
+      position: static;
+      min-width: 0;
+      flex: 1;
+      margin: 0;
+      padding: 10px 56px 10px 18px;
+    }
+
+    .subject.is-focused.is-compact .subject-visual h2 {
+      color: var(--white);
+      font-size: clamp(1.1rem, 2vw, 1.5rem);
+      padding: 0;
+      background: transparent;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, .42);
+      transition: color .25s ease, font-size .28s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .subject.is-focused.is-compact .subject-example-sticky { top: 78px; }
+
+    .subject-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      z-index: 3;
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      color: var(--white);
+      border: 1px solid rgba(251, 252, 250, .3);
+      border-radius: 50%;
+      background: rgba(30, 46, 48, .82);
+      font-family: Arial, sans-serif;
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: opacity .18s ease, transform .18s ease, background .18s ease, color .18s ease;
+    }
+
+    .subject.is-scrolling-down .subject-close:not(:focus-visible) {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-6px);
+    }
+
+    .subject-close:hover,
+    .subject-close:focus-visible { color: var(--ink); background: var(--white); }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(38, 56, 59, .42);
+    }
+
+    body.modal-open { overflow: hidden; }
+    body.modal-open .navigation-toggle,
+    body.modal-open .back-to-top { display: none; }
+
+    @keyframes focus-in {
+      from { opacity: 0; transform: translate(-50%, -48%) scale(.98); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .subject-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 12px;
+    }
+
+    .subject h2 {
+      width: fit-content;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      color: var(--green);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: normal;
+      line-height: 1.15;
+    }
+    .subject-icon { width: 100%; height: 150px; flex: 0 0 auto; object-fit: cover; border-radius: 2px; order: 2; }
+    .subject-copy { display: flex; flex-direction: column; justify-content: center; }
+    .subject p { margin: 0 0 12px; color: var(--muted); line-height: 1.55; }
+    .teacher { margin: 0; color: var(--green); font-family: Arial, sans-serif; font-size: .82rem; font-weight: bold; letter-spacing: .06em; text-transform: uppercase; }
+    .cover-label { margin-top: 8px; color: var(--muted); font-family: Arial, sans-serif; font-size: .72rem; line-height: 1.35; }
+
+    .site-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 34px;
+      align-items: start;
+      position: relative;
+      width: min(1180px, calc(100% - 40px));
+      margin: 100vh auto 0;
+      margin-top: 100svh;
+      padding: clamp(20px, 4vw, 44px);
+      background: transparent;
+    }
+
+    .site-aside {
+      position: sticky;
+      top: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .info-panel {
+      overflow: visible;
+      background: var(--white);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      scroll-margin-top: 24px;
+    }
+
+    .map-frame {
+      position: relative;
+      z-index: 1;
+      display: block;
+      width: 100%;
+      height: 230px;
+      border: 0;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .map-frame:hover,
+    .map-frame:focus-visible {
+      z-index: 4;
+      transform: scale(1.06);
+      box-shadow: 0 16px 30px rgba(38, 56, 59, .24);
+    }
+    .panel-body { padding: 20px; }
+    .panel-kicker { margin: 0 0 8px; color: var(--orange); font-family: Arial, sans-serif; font-size: .72rem; font-weight: bold; letter-spacing: .14em; text-transform: uppercase; }
+    .panel-body h2 { margin: 0 0 14px; font-size: 1.55rem; font-weight: normal; }
+    .contact-list { display: grid; gap: 14px; margin: 0; }
+    .contact-list div { display: grid; gap: 3px; }
+    .contact-list dt { color: var(--muted); font-family: Arial, sans-serif; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+    .contact-list dd { margin: 0; line-height: 1.35; }
+    .contact-list a { color: var(--green); }
+
+    footer {
+      position: relative;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 28px 50px 28px 0;
+      color: var(--white);
+      background: transparent;
+      border-top: 1px solid rgba(251, 252, 250, .45);
+      font-family: Arial, sans-serif;
+      font-size: .85rem;
+      text-align: center;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .85);
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 20px;
+      bottom: 70px;
+      display: grid;
+      width: 50px;
+      height: 50px;
+      place-items: center;
+      color: var(--white);
+      background: var(--green);
+      border-radius: 50%;
+      font-size: 1.7rem;
+      text-decoration: none;
+      z-index: 10;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover,
+    .back-to-top:focus-visible { background: var(--orange); }
+
+    @media (max-width: 700px) {
+      .hero { padding: 28px; }
+      .hero-content { left: 3%; width: 94vw; }
+      .scroll-brand { min-height: 52px; }
+      .navigation-toggle { top: 6px; right: 18px; }
+      .navigation-drawer { width: 100%; padding: 24px; }
+      .modality-list { grid-template-columns: 1fr; }
+      .modality-toggle { min-height: 68px; padding: 18px; }
+      .modality-years { padding: 0 18px 18px; }
+      .navigation-links { grid-template-columns: 1fr; }
+      .contact-options { grid-template-columns: 1fr; }
+      .navigation-link { min-height: 62px; }
+      .site-layout, footer { width: calc(100% - 24px); margin-inline: auto; }
+      .intro { grid-template-columns: 1fr; gap: 12px; padding-top: 42px; }
+      .menu-title { min-height: 64px; padding: 18px; }
+      .menu-content { position: static; padding: 4px 18px 18px; box-shadow: none; backdrop-filter: none; }
+      .menu-content ul { columns: 1; }
+      .site-layout { margin-top: 100vh; margin-top: 100svh; padding: 18px; grid-template-columns: 1fr; }
+      .site-aside { position: static; }
+      .subject { grid-template-columns: 1fr; gap: 0; padding: 0; }
+      .subject-visual { height: 190px; }
+      .subject-visual .subject-heading { padding: 18px; }
+      .subject-copy { padding: 18px; }
+      .subject.is-focused {
+        width: calc(100vw - 24px);
+        height: min(700px, calc(100vh - 24px));
+        max-height: calc(100vh - 24px);
+        padding: 0;
+      }
+      .subject.is-focused .subject-visual {
+        height: 150px;
+        max-height: 150px;
+      }
+      .subject.is-focused .subject-copy { padding: 20px 18px 28px; }
+      .subject.is-focused.is-compact .subject-visual { height: 68px; }
+      .subject.is-focused.is-compact .subject-visual .subject-heading {
+        padding: 8px 48px 8px 12px;
+      }
+      .subject.is-focused.is-compact .subject-visual h2 { font-size: 1.05rem; }
+      .subject-example-images {
+        gap: 10px;
+      }
+      .subject-example-sticky {
+        top: 150px;
+        height: 190px;
+      }
+      .subject.is-focused.is-compact .subject-example-sticky { top: 68px; }
+      .subject-example-images img {
+        width: clamp(220px, 70vw, 320px);
+        height: 170px;
+      }
+      .map-frame:hover, .map-frame:focus-visible { transform: scale(1.03); }
+      footer { padding-right: 0; }
+      .back-to-top { right: 14px; bottom: 64px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .back-to-top { transition: none; }
+      .navigation-drawer,
+      .navigation-drawer::before,
+      .subject-example-images,
+      .subject.is-focused .subject-visual,
+      .subject.is-focused.is-compact .subject-visual .subject-icon,
+      .subject.is-focused.is-compact .subject-visual h2 { transition: none; }
+      .subject.is-focused { scroll-behavior: auto; animation: none; }
+      .subject-example-scroll {
+        width: 100%;
+        height: auto;
+      }
+      .subject-example-sticky {
+        position: static;
+        width: 100%;
+        min-width: 0;
+        height: auto;
+        overflow: visible;
+      }
+      .subject-example-images {
+        flex-wrap: wrap;
+        width: 100%;
+        transform: none !important;
+        will-change: auto;
+      }
+      .subject-example-images img {
+        width: calc(50% - 7px);
+        flex: 0 0 calc(50% - 7px);
+        height: auto;
+        aspect-ratio: 4 / 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="navigation-toggle" type="button" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="navigation-drawer">
+    <span class="navigation-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
+  <div class="navigation-backdrop" aria-hidden="true" hidden></div>
+  <aside class="navigation-drawer" id="navigation-drawer" role="dialog" aria-modal="true" aria-labelledby="navigation-title" aria-hidden="true" inert>
+    <header class="navigation-header">
+      <div>
+        <p class="navigation-kicker">C.E.N.S N° 464</p>
+        <h2 id="navigation-title">Explorá el sitio</h2>
+      </div>
+    </header>
+    <section class="navigation-section" aria-labelledby="modalities-heading">
+      <h3 id="modalities-heading">Modalidades</h3>
+      <div class="modality-list">
+        <section class="modality">
+          <button class="modality-toggle" type="button" aria-expanded="false" aria-controls="years-naturales">Ciencias Naturales</button>
+          <ul class="modality-years" id="years-naturales">
+            <li>1°</li>
+            <li>2°</li>
+            <li>3°</li>
+          </ul>
+        </section>
+        <section class="modality">
+          <button class="modality-toggle" type="button" aria-expanded="false" aria-controls="years-gestion">Gestión</button>
+          <ul class="modality-years" id="years-gestion">
+            <li>1°</li>
+            <li>2°</li>
+            <li>3°</li>
+          </ul>
+        </section>
+      </div>
+    </section>
+    <nav class="navigation-section" aria-labelledby="more-links-heading">
+      <h3 id="more-links-heading">Más del Centro educativo de nivel secundario</h3>
+      <div class="navigation-links">
+        <button class="navigation-link" type="button" disabled>Biblioteca <small>Próximamente</small></button>
+        <button class="navigation-link" type="button" disabled>Galería <small>Próximamente</small></button>
+        <button class="navigation-link" type="button" aria-expanded="false" aria-controls="contact-options">
+          Contacto <span aria-hidden="true">+</span>
+        </button>
+      </div>
+      <div class="contact-options" id="contact-options" hidden>
+        <a class="contact-option" href="mailto:cens464@example.com">
+          Enviar email
+          <small>cens464@example.com (dirección de ejemplo)</small>
+        </a>
+        <a class="contact-option" href="https://www.google.com/maps/search/?api=1&amp;query=490%20Gral.%20Mosconi%2C%20Merlo%2C%20Provincia%20de%20Buenos%20Aires" target="_blank" rel="noopener noreferrer">
+          Abrir mapa
+          <small>490 Gral. Mosconi, Merlo</small>
+        </a>
+      </div>
+    </nav>
+  </aside>
+  <main class="page">
+    <section class="hero" aria-labelledby="titulo-principal">
+      <div class="hero-content">
+        <h1 id="titulo-principal">C.E.N.S N° <span class="hero-number">464</span></h1>
+        <p>Centro educativo de nivel secundario</p>
+      </div>
+    </section>
+    <a class="scroll-brand" href="#titulo-principal" aria-label="CENS 464, volver al inicio" aria-hidden="true">
+      CENS N° <span class="hero-number">&nbsp;464</span>
+    </a>
+
+    <div class="site-layout">
+      <div class="site-content">
+        <section class="menus" aria-label="Materias de primer año">
+      <div class="dropdown-menu">
+        <button class="menu-title" id="primer-ano-naturales" type="button" aria-expanded="false" aria-controls="menu-materias">
+          1° 1° Ciencias Naturales
+        </button>
+        <div class="menu-content" id="menu-materias">
+          <ul>
+            <li><a href="#psicologia-del-desarrollo">Psicologia del Desarrollo</a></li>
+            <li><a href="#practica-del-lenguaje">Practica del Lenguaje</a></li>
+            <li><a href="#ciencias-sociales">Ciencias Sociales</a></li>
+            <li><a href="#tec-y-practica-digital">T.E.C y Practica Digital</a></li>
+            <li><a href="#biologia-y-ambiente">Biologia y Ambiente</a></li>
+            <li><a href="#desarrollo-sustentable">Desarrollo Sustentable</a></li>
+            <li><a href="#lengua-adiccional">Lengua Adicional</a></li>
+            <li><a href="#matematicas">Matematicas</a></li>
+            <li><a href="#salud-y-cultura">Salud y Cultura</a></li>
+            <li><a href="#danzas">Danzas</a></li>
+            <li><a href="#educacion-fisica">Educacion Fisica</a></li>
+          </ul>
+        </div>
+      </div>
+
+        </section>
+
+        <section class="subjects" aria-label="Materias">
+          <article class="subject" id="psicologia-del-desarrollo"><div class="subject-copy"><div class="subject-heading"><h2>Psicologia del Desarrollo</h2></div><p>Estudio de los cambios emocionales, sociales y cognitivos que atraviesan las personas a lo largo de la vida.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Psicologia del Desarrollo"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="practica-del-lenguaje"><div class="subject-copy"><div class="subject-heading"><h2>Practica del Lenguaje</h2></div><p>Lectura, escritura y comunicación para construir textos claros, críticos y adecuados a distintas situaciones.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Practica del Lenguaje"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="ciencias-sociales"><div class="subject-copy"><div class="subject-heading"><h2>Ciencias Sociales</h2></div><p>Herramientas para comprender la organización de las sociedades, sus cambios históricos y sus desafíos actuales.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1461360370896-922624d12b05?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Ciencias Sociales"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="tec-y-practica-digital"><div class="subject-copy"><div class="subject-heading"><h2>T.E.C y Practica Digital</h2></div><p>Uso responsable de tecnologías digitales para investigar, crear, resolver problemas y comunicar proyectos.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Tecnologia y Practica Digital"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="biologia-y-ambiente"><div class="subject-copy"><div class="subject-heading"><h2>Biologia y Ambiente</h2></div><p>Exploración de los seres vivos, sus relaciones y el cuidado consciente de los ambientes que habitamos.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Biologia y Ambiente"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="desarrollo-sustentable"><div class="subject-copy"><div class="subject-heading"><h2>Desarrollo Sustentable</h2></div><p>Análisis de alternativas para producir y vivir cuidando los recursos naturales y el bienestar colectivo.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Desarrollo Sustentable"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="lengua-adicional"><div class="subject-copy"><div class="subject-heading"><h2>Lengua Adicional</h2></div><p>Desarrollo de estrategias para comprender y producir mensajes en una lengua adicional.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Lengua Adicional"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="matematicas"><div class="subject-copy"><div class="subject-heading"><h2>Matematicas</h2></div><p>Resolución de problemas, pensamiento lógico y representación de situaciones mediante herramientas matemáticas.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Matematicas"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="salud-y-cultura"><div class="subject-copy"><div class="subject-heading"><h2>Salud y Cultura</h2></div><p>Reflexión sobre hábitos saludables, vínculos, diversidad cultural y el cuidado integral de las personas.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1505751172876-fa1923c5c528?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Salud y Cultura"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="danzas"><div class="subject-copy"><div class="subject-heading"><h2>Danzas</h2></div><p>El cuerpo, el ritmo y el movimiento como medios de expresión, encuentro y construcción cultural.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1504609813442-a8924e83f76e?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Danzas"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+          <article class="subject" id="educacion-fisica"><div class="subject-copy"><div class="subject-heading"><h2>Educacion Fisica</h2></div><p>Prácticas corporales y deportivas que promueven el bienestar, la cooperación y la autonomía.</p><p class="teacher">Docente: a confirmar</p></div><div><img class="subject-icon" src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&amp;fit=crop&amp;w=600&amp;h=380&amp;q=80" alt="Portada visual de Educacion Fisica"><div class="cover-label">Portada provisoria · reemplazar por fotografía del trabajo propio</div></div></article>
+        </section>
+      </div>
+
+      <aside class="site-aside" aria-label="Información del instituto">
+        <section class="info-panel" id="contacto">
+          <iframe class="map-frame" title="Ubicacion del CENS 464 de Merlo en Google Maps" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1640.137943633815!2d-58.74935938592784!3d-34.698220778374385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bceb0015cb3ef3%3A0x11e56b7e95f431b2!2sCENS%20N%C2%B0%20464%20de%20Merlo!5e0!3m2!1ses-419!2sar!4v1790123161540!5m2!1ses-419!2sar" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <div class="panel-body">
+            <p class="panel-kicker">Encontranos</p>
+            <h2>CENS <span class="hero-number">464</span></h2>
+            <dl class="contact-list">
+              <div><dt>Direccion</dt><dd>490 Gral. Mosconi, Merlo, Provincia de Buenos Aires</dd></div>
+              <div><dt>Correo Electrónico</dt><dd><a href="mailto:cens464@example.com">cens464@example.com</a> (dirección de ejemplo)</dd></div>
+              <div><dt>Directivo</dt><dd>Completar nombre del directivo</dd></div>
+              <div><dt>Horarios</dt><dd>Lunes a Viernes de 08 hs a 22 hs</dd></div>
+            </dl>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <footer>
+      <div>CENS 464 · 1er año Naturales</div>
+      <a class="back-to-top" href="#titulo-principal" aria-label="Volver arriba" title="Volver arriba">↑</a>
+    </footer>
+  </main>
+
+  <script>
+    const hero = document.querySelector('.hero');
+    const heroContent = document.querySelector('.hero-content');
+    const mainTitle = document.querySelector('#titulo-principal');
+    const heroTagline = heroContent.querySelector('p');
+    const backToTop = document.querySelector('.back-to-top');
+    const scrollBrand = document.querySelector('.scroll-brand');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let previousScrollY = window.scrollY;
+    let accumulatedScrollDelta = 0;
+    function updateScrollUI() {
+      const progress = Math.min(window.scrollY / 800, 1);
+      const viewportHeight = window.innerHeight;
+      const mobileViewport = window.innerWidth <= 700;
+      const barHeight = scrollBrand.offsetHeight;
+      const compactTitleSize = parseFloat(getComputedStyle(scrollBrand).fontSize);
+      const heroHeight = viewportHeight * (1 - .44 * progress);
+      const visibleCoverHeight = heroHeight + (barHeight - heroHeight) * progress;
+      const initialTitleSize = Math.max(48, Math.min(window.innerWidth * .08, 108.8));
+      const titleSize = initialTitleSize + (compactTitleSize - initialTitleSize) * progress;
+      const initialContentWidth = mobileViewport
+        ? window.innerWidth * .94
+        : Math.min(window.innerWidth * .48, 660);
+      const contentWidth = initialContentWidth * (1 - progress) + initialContentWidth * compactTitleSize / initialTitleSize * progress;
+      const initialLeft = window.innerWidth * (mobileViewport ? .03 : .05);
+      const compactLeft = parseFloat(getComputedStyle(scrollBrand).paddingLeft);
+      const compactTop = (barHeight - compactTitleSize * .9) / 2;
+      const contentTop = viewportHeight * .6 * (1 - progress) + compactTop * progress;
+      const titleHandoff = Math.min(Math.max((progress - .85) / .15, 0), 1);
+
+      hero.style.height = `${heroHeight}px`;
+      hero.style.clipPath = `inset(0 0 ${heroHeight - visibleCoverHeight}px 0)`;
+      hero.style.zIndex = progress > 0 ? '2' : '0';
+      heroContent.style.top = `${contentTop}px`;
+      heroContent.style.left = `${initialLeft * (1 - progress) + compactLeft * progress}px`;
+      heroContent.style.width = `${contentWidth}px`;
+      heroContent.style.transform = `translateY(${(progress - 1) * 50}%)`;
+      heroContent.style.textAlign = progress > .85 ? 'left' : 'center';
+      mainTitle.style.margin = `${14 * (1 - progress)}px 0`;
+      mainTitle.style.fontSize = `${titleSize}px`;
+      mainTitle.style.opacity = String(1 - titleHandoff);
+      heroTagline.style.opacity = String(1 - progress);
+
+      const brandIsVisible = titleHandoff > 0;
+      scrollBrand.classList.toggle('is-visible', brandIsVisible);
+      scrollBrand.setAttribute('aria-hidden', String(titleHandoff === 0));
+      scrollBrand.style.opacity = String(titleHandoff);
+      scrollBrand.style.transform = `translateY(${(titleHandoff - 1) * 100}%)`;
+    }
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - previousScrollY;
+      if (currentScrollY <= 200) {
+        accumulatedScrollDelta = 0;
+        backToTop.classList.remove('is-visible');
+      } else if (scrollDelta !== 0) {
+        if (Math.sign(scrollDelta) !== Math.sign(accumulatedScrollDelta)) {
+          accumulatedScrollDelta = 0;
+        }
+        accumulatedScrollDelta += scrollDelta;
+        if (accumulatedScrollDelta <= -8) {
+          backToTop.classList.add('is-visible');
+          accumulatedScrollDelta = 0;
+        } else if (accumulatedScrollDelta >= 8) {
+          backToTop.classList.remove('is-visible');
+          accumulatedScrollDelta = 0;
+        }
+      }
+      previousScrollY = currentScrollY;
+      updateScrollUI();
+    }, { passive: true });
+    window.addEventListener('resize', updateScrollUI);
+    updateScrollUI();
+    backToTop.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: reducedMotion.matches ? 'auto' : 'smooth'
+      });
+    });
+
+    const menuButton = document.querySelector('.menu-title');
+    const subjectMenu = document.querySelector('.dropdown-menu');
+    const menuContent = document.querySelector('.menu-content');
+    const exampleImages = [
+      {
+        src: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=700&h=520&q=80',
+        alt: 'Libros y apuntes como material de consulta'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=700&h=520&q=80',
+        alt: 'Ejemplo de material visual de estudio'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=700&h=520&q=80',
+        alt: 'Cuaderno abierto con apuntes'
+      },
+      {
+        src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&h=520&q=80',
+        alt: 'Estudiante utilizando recursos digitales'
+      }
+    ];
+
+    document.querySelectorAll('.subject').forEach((subject, index) => {
+      const image = subject.querySelector('.subject-icon');
+      const media = image.parentElement;
+      const heading = subject.querySelector('.subject-heading');
+      const visual = document.createElement('div');
+      visual.className = 'subject-visual';
+      visual.append(image, heading);
+      media.remove();
+      subject.insertBefore(visual, subject.firstChild);
+
+      const examples = document.createElement('section');
+      examples.className = 'subject-examples';
+      const introduction = document.createElement('p');
+      introduction.textContent = 'Explorá esta materia paso a paso y deslizá para recorrer estas imágenes de referencia.';
+      const subjectName = heading.querySelector('h2').textContent.trim();
+      image.setAttribute('role', 'button');
+      image.setAttribute('tabindex', '0');
+      image.setAttribute('aria-label', `Abrir información de ${subjectName}`);
+      heading.querySelector('h2').dataset.originalTitle = subjectName;
+      examples.append(introduction);
+      [1, 2].forEach((sectionNumber) => {
+        const section = document.createElement('section');
+        section.className = 'subject-example-section';
+        const sectionTitle = document.createElement('h3');
+        sectionTitle.textContent = `${subjectName} ${sectionNumber}`;
+        const sectionDescription = document.createElement('p');
+        sectionDescription.textContent = `Material visual y actividades de ${subjectName.toLowerCase()}, sección ${sectionNumber}.`;
+        const scrollStage = document.createElement('div');
+        scrollStage.className = 'subject-example-scroll';
+        scrollStage.dataset.direction = (index + sectionNumber) % 2 === 0 ? 'left' : 'right';
+        const stickyGallery = document.createElement('div');
+        stickyGallery.className = 'subject-example-sticky';
+        const gallery = document.createElement('div');
+        gallery.className = 'subject-example-images';
+        exampleImages.forEach(({ src, alt }) => {
+          const exampleImage = document.createElement('img');
+          exampleImage.src = src;
+          exampleImage.alt = alt;
+          exampleImage.loading = 'lazy';
+          exampleImage.decoding = 'async';
+          gallery.append(exampleImage);
+        });
+        stickyGallery.append(gallery);
+        scrollStage.append(stickyGallery);
+        section.append(sectionTitle, sectionDescription, scrollStage);
+        examples.append(section);
+      });
+      subject.querySelector('.subject-copy').append(examples);
+    });
+
+    const subjectTitles = document.querySelectorAll('.subject h2');
+    let activeSubject = null;
+    let backdrop = null;
+    let galleryScrollHandler = null;
+    let galleryResizeHandler = null;
+    let previousSubjectScrollTop = 0;
+    let subjectHistoryEntry = false;
+    const subjectHistoryKey = '__cens464Subject';
+
+    function updateActiveGallery() {
+      if (!activeSubject) return;
+      const scrollTop = activeSubject.scrollTop;
+      activeSubject.classList.toggle('is-compact', scrollTop > 48);
+      if (scrollTop > previousSubjectScrollTop + 1 && scrollTop > 48) {
+        activeSubject.classList.add('is-scrolling-down');
+      } else if (scrollTop < previousSubjectScrollTop - 1 || scrollTop <= 48) {
+        activeSubject.classList.remove('is-scrolling-down');
+      }
+      previousSubjectScrollTop = scrollTop;
+      const subjectTitle = activeSubject.querySelector('h2');
+      const headerBottom = activeSubject.querySelector('.subject-visual').getBoundingClientRect().bottom;
+      let visibleSectionTitle = subjectTitle.dataset.originalTitle;
+      activeSubject.querySelectorAll('.subject-example-section h3').forEach((sectionTitle) => {
+        if (sectionTitle.getBoundingClientRect().top <= headerBottom + 16) {
+          visibleSectionTitle = sectionTitle.textContent;
+        }
+      });
+      if (subjectTitle.textContent !== visibleSectionTitle) {
+        subjectTitle.textContent = visibleSectionTitle;
+        if (!reducedMotion.matches) {
+          subjectTitle.animate(
+            [{ opacity: .55, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            { duration: 220, easing: 'ease-out' }
+          );
+        }
+      }
+      if (reducedMotion.matches) return;
+      activeSubject.querySelectorAll('.subject-example-scroll').forEach((stage) => {
+        const stickyGallery = stage.querySelector('.subject-example-sticky');
+        const gallery = stage.querySelector('.subject-example-images');
+        const stickyTop = parseFloat(getComputedStyle(stickyGallery).top) || 0;
+        const scrollStart = stage.offsetTop - stickyTop;
+        const scrollRange = Math.max(stage.offsetHeight - stickyGallery.offsetHeight, 1);
+        const progress = Math.min(Math.max((activeSubject.scrollTop - scrollStart) / scrollRange, 0), 1);
+        const maxShift = Math.max(gallery.scrollWidth - stickyGallery.clientWidth, 0);
+        const shift = stage.dataset.direction === 'right'
+          ? -maxShift * (1 - progress)
+          : -maxShift * progress;
+        gallery.style.transform = `translate3d(${shift}px, 0, 0)`;
+      });
+    }
+
+    menuButton.addEventListener('click', () => {
+      const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!isExpanded));
+      subjectMenu.classList.toggle('is-open', !isExpanded);
+      if (!isExpanded) {
+        requestAnimationFrame(() => {
+          menuContent.scrollIntoView({
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+            block: 'center'
+          });
+        });
+      }
+    });
+
+    function closeSubject({ fromHistory = false, preserveHistory = false } = {}) {
+      if (!activeSubject) return;
+      const shouldGoBack = subjectHistoryEntry && !fromHistory && !preserveHistory;
+      if (preserveHistory && subjectHistoryEntry) {
+        const state = history.state && typeof history.state === 'object'
+          ? { ...history.state }
+          : {};
+        delete state[subjectHistoryKey];
+        history.replaceState(state, '', location.href);
+      }
+      subjectHistoryEntry = false;
+      activeSubject.removeEventListener('scroll', galleryScrollHandler);
+      window.removeEventListener('resize', galleryResizeHandler);
+      activeSubject.classList.remove('is-focused', 'is-compact', 'is-scrolling-down');
+      activeSubject.querySelector('.subject-close')?.remove();
+      const subjectTitle = activeSubject.querySelector('h2');
+      subjectTitle.textContent = subjectTitle.dataset.originalTitle;
+      subjectTitle.setAttribute('aria-expanded', 'false');
+      activeSubject = null;
+      galleryScrollHandler = null;
+      galleryResizeHandler = null;
+      backdrop?.remove();
+      backdrop = null;
+      document.body.classList.remove('modal-open');
+      if (shouldGoBack) history.back();
+    }
+
+    const navigationToggle = document.querySelector('.navigation-toggle');
+    const navigationDrawer = document.querySelector('.navigation-drawer');
+    const navigationBackdrop = document.querySelector('.navigation-backdrop');
+    const navigationIllustrations = {
+      naturales: 'url("https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=1800&q=75")',
+      gestion: 'url("https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1800&q=75")',
+      biblioteca: 'url("https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=75")',
+      galeria: 'url("https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&w=1800&q=75")'
+    };
+
+    function setNavigationPreview(name) {
+      navigationDrawer.dataset.preview = name;
+      navigationDrawer.style.setProperty('--navigation-illustration', navigationIllustrations[name]);
+    }
+
+    function clearNavigationPreview() {
+      delete navigationDrawer.dataset.preview;
+      navigationDrawer.style.removeProperty('--navigation-illustration');
+    }
+
+    function closeNavigation() {
+      if (!navigationDrawer.classList.contains('is-open')) return;
+      navigationDrawer.classList.remove('is-open');
+      navigationDrawer.setAttribute('aria-hidden', 'true');
+      navigationDrawer.inert = true;
+      navigationBackdrop.hidden = true;
+      clearNavigationPreview();
+      navigationToggle.classList.remove('is-open');
+      navigationToggle.setAttribute('aria-expanded', 'false');
+      navigationToggle.setAttribute('aria-label', 'Abrir menú de navegación');
+      document.querySelector('.page').inert = false;
+      document.body.classList.remove('navigation-open');
+      navigationToggle.focus();
+    }
+
+    function openNavigation() {
+      closeSubject();
+      navigationDrawer.classList.add('is-open');
+      navigationDrawer.setAttribute('aria-hidden', 'false');
+      navigationDrawer.inert = false;
+      navigationBackdrop.hidden = false;
+      navigationToggle.classList.add('is-open');
+      navigationToggle.setAttribute('aria-expanded', 'true');
+      navigationToggle.setAttribute('aria-label', 'Cerrar menú de navegación');
+      document.querySelector('.page').inert = true;
+      document.body.classList.add('navigation-open');
+      navigationDrawer.querySelector('.modality-toggle').focus();
+    }
+
+    navigationToggle.addEventListener('click', () => {
+      if (navigationDrawer.classList.contains('is-open')) {
+        closeNavigation();
+      } else {
+        openNavigation();
+      }
+    });
+    navigationBackdrop.addEventListener('click', closeNavigation);
+
+    navigationDrawer.querySelectorAll('.modality-toggle').forEach((button) => {
+      button.addEventListener('click', () => {
+        const expanded = button.getAttribute('aria-expanded') === 'true';
+        button.setAttribute('aria-expanded', String(!expanded));
+        document.getElementById(button.getAttribute('aria-controls')).classList.toggle('is-open', !expanded);
+      });
+
+      const modality = button.closest('.modality');
+      modality.addEventListener('pointerenter', (event) => {
+        if (event.pointerType !== 'mouse') return;
+        setNavigationPreview(button.getAttribute('aria-controls') === 'years-naturales' ? 'naturales' : 'gestion');
+        button.setAttribute('aria-expanded', 'true');
+        document.getElementById(button.getAttribute('aria-controls')).classList.add('is-open');
+      });
+      modality.addEventListener('pointerleave', (event) => {
+        if (event.pointerType !== 'mouse' || modality.contains(document.activeElement)) return;
+        clearNavigationPreview();
+        button.setAttribute('aria-expanded', 'false');
+        document.getElementById(button.getAttribute('aria-controls')).classList.remove('is-open');
+      });
+    });
+
+    function previewForNavigationTarget(target) {
+      const modality = target.closest('.modality');
+      if (modality) {
+        return modality.querySelector('[aria-controls="years-naturales"]') ? 'naturales' : 'gestion';
+      }
+      const link = target.closest('.navigation-link');
+      if (link?.textContent.includes('Biblioteca')) return 'biblioteca';
+      if (link?.textContent.includes('Galería')) return 'galeria';
+      return null;
+    }
+
+    navigationDrawer.addEventListener('pointerover', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const preview = previewForNavigationTarget(event.target);
+      if (preview) setNavigationPreview(preview);
+    });
+    navigationDrawer.addEventListener('pointerout', (event) => {
+      if (event.pointerType !== 'mouse') return;
+      const previous = previewForNavigationTarget(event.target);
+      const next = event.relatedTarget instanceof Element
+        ? previewForNavigationTarget(event.relatedTarget)
+        : null;
+      if (previous && previous !== next && !navigationDrawer.contains(document.activeElement)) {
+        clearNavigationPreview();
+      }
+    });
+    navigationDrawer.addEventListener('focusin', (event) => {
+      const preview = previewForNavigationTarget(event.target);
+      if (preview) setNavigationPreview(preview);
+    });
+    navigationDrawer.addEventListener('focusout', (event) => {
+      const previous = previewForNavigationTarget(event.target);
+      const next = event.relatedTarget instanceof Element
+        ? previewForNavigationTarget(event.relatedTarget)
+        : null;
+      if (previous && previous !== next) clearNavigationPreview();
+    });
+
+    const contactToggle = navigationDrawer.querySelector('[aria-controls="contact-options"]');
+    const contactOptions = document.getElementById('contact-options');
+    contactToggle.addEventListener('click', () => {
+      const expanded = contactToggle.getAttribute('aria-expanded') === 'true';
+      contactToggle.setAttribute('aria-expanded', String(!expanded));
+      contactToggle.lastElementChild.textContent = expanded ? '+' : '−';
+      contactOptions.hidden = expanded;
+    });
+
+    function openSubject(subject) {
+      closeSubject({ preserveHistory: true });
+      const state = history.state && typeof history.state === 'object'
+        ? { ...history.state }
+        : {};
+      history.pushState({ ...state, [subjectHistoryKey]: true }, '', location.href);
+      subjectHistoryEntry = true;
+      activeSubject = subject;
+      activeSubject.classList.add('is-focused');
+      activeSubject.scrollTop = 0;
+      previousSubjectScrollTop = 0;
+      activeSubject.querySelector('h2').setAttribute('aria-expanded', 'true');
+
+      const closeButton = document.createElement('button');
+      closeButton.className = 'subject-close';
+      closeButton.type = 'button';
+      closeButton.setAttribute('aria-label', 'Cerrar información de la materia');
+      closeButton.textContent = '×';
+      closeButton.addEventListener('click', closeSubject);
+      activeSubject.querySelector('.subject-visual').append(closeButton);
+
+      backdrop = document.createElement('div');
+      backdrop.className = 'modal-backdrop';
+      backdrop.addEventListener('click', closeSubject);
+      document.body.append(backdrop);
+      document.body.classList.add('modal-open');
+      galleryScrollHandler = updateActiveGallery;
+      galleryResizeHandler = updateActiveGallery;
+      activeSubject.addEventListener('scroll', galleryScrollHandler, { passive: true });
+      window.addEventListener('resize', galleryResizeHandler);
+      requestAnimationFrame(updateActiveGallery);
+      closeButton.focus();
+    }
+
+    subjectTitles.forEach((title) => {
+      title.setAttribute('tabindex', '0');
+      title.setAttribute('role', 'button');
+      title.setAttribute('aria-expanded', 'false');
+      title.addEventListener('click', () => openSubject(title.closest('.subject')));
+      title.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openSubject(title.closest('.subject'));
+        }
+      });
+    });
+
+    document.querySelectorAll('.subject-icon').forEach((image) => {
+      image.addEventListener('click', () => openSubject(image.closest('.subject')));
+      image.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openSubject(image.closest('.subject'));
+        }
+      });
+    });
+
+    window.addEventListener('popstate', () => {
+      if (activeSubject && subjectHistoryEntry) {
+        closeSubject({ fromHistory: true });
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeNavigation();
+        closeSubject();
+      }
+      if (event.key === 'Tab' && navigationDrawer.classList.contains('is-open')) {
+        const focusable = [...navigationDrawer.querySelectorAll('button:not(:disabled), a[href]')]
+          .filter((element) => element.getClientRects().length > 0);
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
