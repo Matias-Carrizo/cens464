@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galería | C.E.N.S N° 464</title>
+  <style>
+    :root {
+      --ink: #26383b;
+      --muted: #607174;
+      --paper: #eef2f0;
+      --white: #fbfcfa;
+      --green: #315d5a;
+      --orange: #ad765e;
+      --line: #d3ddda;
+      --shadow: 0 18px 40px rgba(38, 56, 59, .12);
+      --cover-image: linear-gradient(90deg, rgba(31, 55, 57, .82), rgba(31, 55, 57, .18)), url('https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1800&q=85');
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      background-image: var(--cover-image);
+      background-position: center;
+      background-size: cover;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .gallery-hero {
+      display: flex;
+      min-height: 260px;
+      align-items: flex-end;
+      padding: 32px max(24px, calc((100% - 1120px) / 2));
+      color: var(--white);
+      background-image: var(--cover-image);
+      background-position: center;
+      background-size: cover;
+    }
+
+    .hero-content { width: 100%; }
+    .home-link {
+      display: inline-block;
+      margin-bottom: 30px;
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .9rem;
+      text-decoration: none;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .8);
+    }
+    .home-link:hover, .home-link:focus-visible { text-decoration: underline; }
+    h1 { margin: 0; font-size: clamp(2.8rem, 8vw, 5rem); font-weight: normal; line-height: 1; }
+    .hero-subtitle { margin: 12px 0 0; font-size: 1.15rem; }
+    .hero-number { font-family: Arial, Helvetica, sans-serif; font-weight: 300; }
+
+    main {
+      width: min(1120px, calc(100% - 40px));
+      margin: 36px auto 60px;
+    }
+
+    .gallery-panel {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--green);
+      background: var(--white);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 24px clamp(20px, 4vw, 40px) 18px;
+    }
+    .panel-kicker {
+      margin: 0 0 8px;
+      color: var(--orange);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .72rem;
+      font-weight: bold;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    h2 { margin: 0; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: normal; }
+    .photo-count { margin: 0; color: var(--muted); font-family: Arial, Helvetica, sans-serif; font-size: .9rem; }
+
+    .carousel { padding: 0 clamp(12px, 3vw, 28px) 24px; }
+    .photo-frame {
+      position: relative;
+      display: grid;
+      min-height: 240px;
+      height: min(62vh, 640px);
+      place-items: center;
+      overflow: hidden;
+      background: #dce5df;
+    }
+    .photo-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, .6);
+      border-radius: 50%;
+      background: rgba(38, 56, 59, .76);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1.8rem;
+      line-height: 1;
+      cursor: pointer;
+      transform: translateY(-50%);
+    }
+    .carousel-button:hover, .carousel-button:focus-visible { background: var(--green); }
+    .carousel-button:focus-visible, .home-link:focus-visible, .carousel-dots button:focus-visible {
+      outline: 3px solid #ef8752;
+      outline-offset: 3px;
+    }
+    .carousel-button.previous { left: 16px; }
+    .carousel-button.next { right: 16px; }
+    .photo-caption {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      text-align: center;
+    }
+    .carousel-dots {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    .carousel-dots button {
+      display: block;
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: #b9c5c1;
+      cursor: pointer;
+    }
+    .carousel-dots button[aria-current="true"] { background: var(--green); transform: scale(1.35); }
+
+    footer {
+      padding: 22px 12px;
+      color: var(--white);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: .85rem;
+      text-align: center;
+      text-shadow: 0 1px 5px rgba(0, 0, 0, .85);
+    }
+
+    @media (max-width: 600px) {
+      .gallery-hero { min-height: 220px; padding: 24px; }
+      .home-link { margin-bottom: 24px; }
+      main { width: calc(100% - 24px); margin-top: 20px; }
+      .panel-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .photo-frame { height: min(58vh, 520px); }
+      .carousel-button { width: 42px; height: 42px; }
+      .carousel-button.previous { left: 10px; }
+      .carousel-button.next { right: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="gallery-hero">
+    <div class="hero-content">
+      <a class="home-link" href="index.html">← Volver al inicio</a>
+      <h1>Galería <span class="hero-number">464</span></h1>
+      <p class="hero-subtitle">C.E.N.S N° 464 · Espacios de nuestra escuela</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="gallery-panel" aria-labelledby="gallery-title">
+      <div class="panel-heading">
+        <div>
+          <p class="panel-kicker">C.E.N.S N° 464</p>
+          <h2 id="gallery-title">Recorré nuestra escuela</h2>
+        </div>
+        <p class="photo-count" id="photo-count" aria-live="polite"></p>
+      </div>
+      <div class="carousel" aria-label="Carrusel de imágenes de la escuela">
+        <div class="photo-frame" id="photo-frame" tabindex="0" aria-label="Usá las flechas izquierda y derecha para recorrer las fotos">
+          <img id="gallery-image" src="imagenes/Salon%20N%20a%201%C2%B0.jpeg" alt="Salón N a 1°" fetchpriority="high">
+          <button class="carousel-button previous" type="button" aria-label="Imagen anterior">‹</button>
+          <button class="carousel-button next" type="button" aria-label="Imagen siguiente">›</button>
+        </div>
+        <p class="photo-caption" id="photo-caption"></p>
+        <ol class="carousel-dots" id="carousel-dots" aria-label="Elegir una imagen"></ol>
+      </div>
+    </section>
+  </main>
+
+  <footer>CENS 464 · Centro educativo de nivel secundario</footer>
+
+  <script>
+    const images = [
+      'Salon N a 1°.jpeg',
+      'Salon N 3°.jpeg',
+      'Salon N 1°.jpeg',
+      'Preceptoria.jpeg',
+      'Pintura Afiche Pasillo.jpeg',
+      'Pasillo22 1°.jpeg',
+      'Pasillo Escalera.jpeg',
+      'Pasillo B.jpeg',
+      'Biblioteca.jpeg',
+      'Aula N 3° a.jpeg',
+      'Aula N 2°.jpeg',
+      'Aula N 2° a.jpeg',
+      'Aula E 3°.jpeg',
+      'Aula E 3° d.jpeg',
+      'Aula E 3° c.jpeg',
+      'Aula E 3° b.jpeg',
+      '1° N Biologia.jpeg'
+    ];
+    const galleryImage = document.querySelector('#gallery-image');
+    const photoCaption = document.querySelector('#photo-caption');
+    const photoCount = document.querySelector('#photo-count');
+    const dots = document.querySelector('#carousel-dots');
+    const photoFrame = document.querySelector('#photo-frame');
+    let activeIndex = 0;
+
+    function titleFromFilename(filename) {
+      return filename.replace(/\.jpeg$/i, '');
+    }
+
+    function showImage(index) {
+      activeIndex = (index + images.length) % images.length;
+      const filename = images[activeIndex];
+      const title = titleFromFilename(filename);
+      galleryImage.src = `imagenes/${encodeURIComponent(filename)}`;
+      galleryImage.alt = title;
+      photoCaption.textContent = title;
+      photoCount.textContent = `${activeIndex + 1} / ${images.length}`;
+      dots.querySelectorAll('button').forEach((dot, dotIndex) => {
+        dot.setAttribute('aria-current', String(dotIndex === activeIndex));
+      });
+    }
+
+    images.forEach((filename, index) => {
+      const item = document.createElement('li');
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Mostrar imagen ${index + 1}: ${titleFromFilename(filename)}`);
+      dot.addEventListener('click', () => showImage(index));
+      item.append(dot);
+      dots.append(item);
+    });
+
+    document.querySelector('.previous').addEventListener('click', () => showImage(activeIndex - 1));
+    document.querySelector('.next').addEventListener('click', () => showImage(activeIndex + 1));
+    photoFrame.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        showImage(activeIndex - 1);
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        showImage(activeIndex + 1);
+      }
+    });
+
+    showImage(activeIndex);
+  </script>
+</body>
+</html>
